@@ -52,13 +52,40 @@ namespace Course232
                 }
             }
 
-            var avg = list.Select(p => p.Price).DefaultIfEmpty(0.0).Average();
+            //double avg = list.Select(p => p.Price).DefaultIfEmpty(0.0).Average();
+
+
+            var avg = (from p in list
+                       select p.Price)
+                       .DefaultIfEmpty(0.0)
+                       .Average();
+
             Console.WriteLine("Average price = " + avg.ToString("C", new CultureInfo("pt-BR")));
 
-            var names = list.Where(p => p.Price < avg).OrderByDescending(p => p.Name).Select(p => p.Name);
-            foreach (string name in names)
+            /*
+            var names = list
+                            .Where(
+                                    p => p.Price < avg
+                                   )
+                            .OrderByDescending(
+                                p => p.Name
+                                )
+                            .Select(
+                                p => p.Name
+                                );
+            */
+
+            //USANDO O LINQ COM NOTAÇÃO SQL - colocando em ordem alfabética
+            IEnumerable<Product> names =
+                    from p in list
+                    where p.Price < avg
+                    orderby p.Price
+                    orderby p.Name
+                    select p;
+
+            foreach (Product produc in names)
             {
-                Console.WriteLine(name);
+                Console.WriteLine(produc.Name + " " + produc.Price.ToString("C", new CultureInfo("pt-BR")));
             }
         }
     }
