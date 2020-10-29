@@ -48,6 +48,7 @@ namespace Course232
                     string[] fields = sr.ReadLine().Split(',');
                     string name = fields[0];
                     double price = double.Parse(fields[1], CultureInfo.InvariantCulture);
+
                     list.Add(new Product(name, price));
                 }
             }
@@ -55,14 +56,14 @@ namespace Course232
             //double avg = list.Select(p => p.Price).DefaultIfEmpty(0.0).Average();
 
 
-            var avg = (from p in list
+            double avg = (from p in list
                        select p.Price)
                        .DefaultIfEmpty(0.0)
                        .Average();
 
             Console.WriteLine("Average price = " + avg.ToString("C", new CultureInfo("pt-BR")));
 
-            /*
+            /* padrão LINQ
             var names = list
                             .Where(
                                     p => p.Price < avg
@@ -79,13 +80,13 @@ namespace Course232
             IEnumerable<Product> names =
                     from p in list
                     where p.Price < avg
-                    orderby p.Price
-                    orderby p.Name
+                    orderby p.Name descending
                     select p;
 
             foreach (Product produc in names)
             {
                 Console.WriteLine(produc.Name + " " + produc.Price.ToString("C", new CultureInfo("pt-BR")));
+
             }
         }
     }
